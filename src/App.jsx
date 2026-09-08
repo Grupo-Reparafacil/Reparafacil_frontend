@@ -5,10 +5,18 @@ function App() {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
   const [mostrarSenha, setMostrarSenha] = useState(false)
+  // Novos campos para a tela de registro
+  const [nomeCompleto, setNomeCompleto] = useState('')
+  const [tipoPerfil, setTipoPerfil] = useState('cliente') // 'cliente' ou 'profissional'
 
-  const handleLogin = (e) => {
+  const handleRegister = (e) => {
     e.preventDefault()
-    console.log('Login com:', { email, senha })
+    console.log('Dados do novo registro:', { 
+      nomeCompleto,
+      email,
+      senha,
+      tipoPerfil
+    })
   }
 
   return (
@@ -17,15 +25,49 @@ function App() {
         {/* Logo e Título */}
         <div className="header">
           <div className="logo-box">R</div>
-          <h1>REPARAFÁCIL</h1>
-          <p className="subtitle">Faça login para continuar</p>
+          <h1>Criar Conta</h1>
+          <p className="subtitle">Preencha seus dados para começar</p>
         </div>
 
-        {/* Campo de E-mail */}
-        <div className="form-card">
-          <form onSubmit={handleLogin}>
+        {/* Novo Formulário de Registro */}
+          <form onSubmit={handleRegister}>
+            {/* Campo de Nome Completo */}
             <div className="input-group">
-              <label>E-mail</label>
+              <label htmlFor="nome">Nome Completo</label>
+              <div className="input-wrapper">
+                {/* Mostrar o ícone somente se o campo de nome completo estiver vazio */}
+                {!nomeCompleto && (
+                  <svg 
+                    className="icon"
+                    xmlns="http://www.w3.org/2000/svg" 
+                    viewBox="0 0 24 24" 
+                    width="18" 
+                    height="18" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                  >
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                  </svg>
+                )}
+                <input
+                type="text"
+                id="nome"
+                placeholder="Seu nome completo"
+                value={nomeCompleto}
+                onChange={(e) => setNomeCompleto(e.target.value)}
+                className={nomeCompleto ? 'has-value' : ''}
+                required
+                />
+              </div>
+            </div>
+          { /*Campo de Email*/}
+            <div className="input-group">
+              <label
+              htmlFor="email">E-mail</label>
               <div className="input-wrapper">
                 {/* Mostrar o ícone somente se o campo de e-mail estiver vazio */}
                 {!email && (
@@ -47,6 +89,7 @@ function App() {
                 )}
                 <input
                   type="email"
+                  id="email"
                   placeholder="seu@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -58,7 +101,7 @@ function App() {
              
              {/* Campo de Senha */}
             <div className="input-group">
-              <label>Senha</label>
+              <label htmlFor="senha">Senha</label>
               <div className="input-wrapper">
                 {/* Mostrar o ícone somente se o campo de senha estiver vazio */}
                 {!senha && (
@@ -80,6 +123,7 @@ function App() {
                 )}
                 <input
                   type={mostrarSenha ? 'text' : 'password'}
+                  id="senha"
                   placeholder="••••••••"
                   value={senha}
                   onChange={(e) => setSenha(e.target.value)}
@@ -128,23 +172,41 @@ function App() {
               </div>
             </div>
 
-            <div className="forgot-password">
-              <a href="#">Esqueci minha senha</a>
+            {/*Seleçao de tipo de perfil */}
+            <div className="input-group">
+              <label>Tipo de perfil</label>
+            <div className="profile-selector">
+              <button type="button"
+              className={`profile-card ${tipoPerfil === 'cliente' ? 'active' : ''}`}
+              onClick={() => setTipoPerfil('cliente')}
+              >
+                <span
+                className="profile-title">Cliente</span>
+                <span
+                className="profile-desc">Procuro serviços</span>
+              </button>
+
+            <button type="button" 
+            className={`profile-card ${tipoPerfil === 'profissional' ? 'active' : ''}`}
+              onClick={() => setTipoPerfil('profissional')}
+              >
+                <span className="profile-title">Profissional</span>
+                <span className="profile-desc">Ofereço serviços</span>
+            </button>
+            </div>
             </div>
 
-            <button type="submit" className="btn-primary">
-              Entrar
+            <button type="submit"
+            className="btn-primary"> Cadastrar
             </button>
           </form>
-
           <div className="divider">
-            <span>Novo no app?</span>
+            <span>Já tem uma conta?</span>
           </div>
 
           <button type="button" className="btn-secondary">
-            Criar uma conta
+            Fazer login
           </button>
-        </div>
 
         {/* Rodapé */}
         <div className="footer-terms">
