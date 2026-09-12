@@ -1,0 +1,14 @@
+.busca-container{min-height:100vh;background:#eef2ff}
+.busca-header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:#fff;border-bottom:1px solid #eee;position:sticky;top:0;z-index:10}
+.btn-meuperfil{background:#2563eb;color:#fff;padding:7px 14px;border-radius:20px;text-decoration:none;font-size:13px;font-weight:700}
+.busca-lista{max-width:700px;margin:0 auto;padding:16px}
+.busca-input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid #e5e7eb;margin:12px 0;box-sizing:border-box}
+.prof-card{background:#fff;border-radius:16px;padding:14px;margin-top:14px;box-shadow:0 4px 16px rgba(0,0,0,.05)}
+.prof-top{display:flex;gap:12px}
+.prof-top img{width:64px;height:64px;border-radius:12px;object-fit:cover}
+.prof-info{display:flex;flex-direction:column;gap:2px}
+.disp{font-size:11px;color:#10b981;font-weight:700}
+.nota{font-size:12px}
+.local{font-size:11px;color:#6b7280}
+.btn-ver{width:100%;margin-top:10px;background:#2563eb;color:#fff;border:none;padding:10px;border-radius:10px;font-weight:700;cursor:pointer}
+.btn-contatar{width:100%;margin-top:8px;background:#fff;color:#2563eb;border:1px solid #dbeafe;padding:10px;border-radius:10px;font-weight:700;cursor:pointer}

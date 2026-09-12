@@ -1,78 +1,63 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import './NovaPagina.css'
 
-function NovaPagina() {
-  const [nome, setNome] = useState('')
-  const [email, setEmail] = useState('')
-  const [cpf, setCpf] = useState('')
-  const [senha, setSenha] = useState('')
-  const [tipo, setTipo] = useState('cliente')
+function NovaPagina(){
+  const navigate = useNavigate()
+  const [form, setForm] = useState({
+    nome: '', cpf: '', email: '', senha: '', perfil: 'Cliente'
+  })
 
-  // Máscara de CPF
-  function mascaraCpf(value) {
-    return value
-      .replace(/\D/g, '')
-      .replace(/(\d{3})(\d)/, '$1.$2')
-      .replace(/(\d{3})(\d)/, '$1.$2')
-      .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
-      .slice(0, 14)
+  function handleChange(e){
+    setForm({...form, [e.target.name]: e.target.value})
   }
 
-  function handleSubmit(e) {
+  function handleSubmit(e){
     e.preventDefault()
-    const cpfLimpo = cpf.replace(/\D/g, '')
-    if (cpfLimpo.length !== 11) {
-      alert('CPF inválido! Digite 11 números.')
-      return
-    }
-    alert(`Conta criada!\nNome: ${nome}\nCPF: ${cpf}\nTipo: ${tipo}`)
+    // por enquanto só navega
+    navigate('/login')
   }
 
-  return (
-    <div className="login-container">
-      <div className="login-card">
-        <div className="header">
-          <div className="logo-box">R</div>
-          <h1>Criar Conta</h1>
-          <p className="subtitle">Cadastre-se no Repara Fácil</p>
-        </div>
+  return(
+    <div className="page-container">
+      <div className="form-card">
+        <div className="logo-box">R</div>
+        <h1 className="brand">Criar Conta</h1>
+        <p className="subtitle">Cadastre-se no Repara Fácil</p>
 
         <form onSubmit={handleSubmit}>
-          <div>
+          <div className="input-group">
             <label>Nome completo</label>
-            <input type="text" placeholder="Seu nome" value={nome} onChange={e => setNome(e.target.value)} required />
+            <input name="nome" placeholder="Seu nome" value={form.nome} onChange={handleChange} />
           </div>
 
-          <div>
+          <div className="input-group">
             <label>CPF</label>
-            <input type="text" placeholder="000.000.000-00" value={cpf} onChange={e => setCpf(mascaraCpf(e.target.value))} required />
+            <input name="cpf" placeholder="000.000.000-00" value={form.cpf} onChange={handleChange} />
           </div>
 
-          <div>
+          <div className="input-group">
             <label>E-mail</label>
-            <input type="email" placeholder="seu@email.com" value={email} onChange={e => setEmail(e.target.value)} required />
+            <input name="email" type="email" placeholder="seu@email.com" value={form.email} onChange={handleChange} />
           </div>
 
-          <div>
+          <div className="input-group">
             <label>Senha</label>
-            <input type="password" placeholder="••••••••" value={senha} onChange={e => setSenha(e.target.value)} required />
+            <input name="senha" type="password" placeholder="********" value={form.senha} onChange={handleChange} />
           </div>
 
-          <div>
+          <div className="input-group">
             <label>Tipo de perfil</label>
-            <select value={tipo} onChange={e => setTipo(e.target.value)}>
-              <option value="cliente">Cliente</option>
-              <option value="prestador">Prestador</option>
+            <select name="perfil" value={form.perfil} onChange={handleChange}>
+              <option>Cliente</option>
+              <option>Profissional</option>
             </select>
           </div>
 
           <button type="submit" className="btn-primary">Criar conta</button>
         </form>
 
-        <p style={{textAlign:'center', marginTop:'16px', fontSize:'14px'}}>
-          Já tem conta? <Link to="/login">Fazer login</Link>
-        </p>
+        <p className="footer-text">Já tem conta? <Link to="/login">Fazer login</Link></p>
       </div>
     </div>
   )

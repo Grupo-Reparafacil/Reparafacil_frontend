@@ -1,0 +1,7 @@
+.perfil-container{min-height:100vh;background:#eef3ff;display:flex;justify-content:center;padding:20px}
+.perfil-card{width:100%;max-width:520px;background:#fff;border-radius:20px;padding:20px}
+.voltar-link{text-decoration:none;background:#f3f4f6;padding:6px 12px;border-radius:20px;font-size:13px;font-weight:700;color:#111;display:inline-block;margin-bottom:12px}
+.perfil-top{text-align:center;border-bottom:1px solid #eee;padding-bottom:16px;margin-bottom:16px}
+.perfil-top img{width:80px;height:80px;border-radius:50%}
+.tag{background:#eef3ff;padding:6px 10px;border-radius:20px;font-size:12px}
+.avaliacao{background:#f9fafb;padding:10px;border-radius:10px;margin-bottom:8px;font-size:13px}

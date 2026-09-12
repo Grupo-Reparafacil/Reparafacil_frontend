@@ -1,0 +1,16 @@
+.contatar-container{min-height:100vh;background:#eef3ff;display:flex;justify-content:center;padding:24px 16px}
+.contatar-card{width:100%;max-width:520px;background:#fff;border-radius:20px;padding:22px;box-shadow:0 10px 30px rgba(0,0,0,.06);box-sizing:border-box}
+.voltar{text-decoration:none;background:#f3f4f6;color:#111827;padding:8px 14px;border-radius:20px;font-size:13px;font-weight:700;display:inline-flex;align-items:center}
+.prof-header{display:flex;gap:14px;padding:14px;background:#f9fafb;border-radius:14px;align-items:center;margin:16px 0}
+.prof-header img{width:68px;height:68px;border-radius:14px;object-fit:cover}
+.prof-header strong{display:block;font-size:16px}
+.profissao{font-size:13px;color:#6b7280;margin:2px 0;text-transform:capitalize}
+.local{font-size:12px;color:#6b7280;margin:2px 0}
+.badge{background:#dcfce7;color:#16a34a;font-size:11px;padding:4px 8px;border-radius:20px;font-weight:700;display:inline-block;margin-top:4px}
+.contatar-card h3{margin:18px 0 14px;font-size:16px;font-weight:800}
+.input-group{margin-bottom:14px;width:100%;display:block}
+.input-group label{font-size:13px;font-weight:700;display:block;margin-bottom:6px;color:#111827}
+.input-group input{width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #e5e7eb;border-radius:10px;outline:none;font-size:14px}
+.input-group textarea{width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #e5e7eb;border-radius:10px;outline:none;font-size:14px;height:110px;resize:none;font-family:inherit}
+.btn-whats{width:100%;background:#25D366;color:#fff;border:none;border-radius:10px;padding:13px;font-weight:700;cursor:pointer;margin-top:8px}
+.btn-enviar{width:100%;background:#2563eb;color:#fff;border:none;border-radius:10px;padding:13px;font-weight:700;cursor:pointer;margin-top:8px}
