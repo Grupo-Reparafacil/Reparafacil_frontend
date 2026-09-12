@@ -40,7 +40,6 @@ const profissionais = {
     ]
   },
 }
-
 export default function Perfil(){
   const {id} = useParams()
   const navigate = useNavigate()
@@ -84,12 +83,11 @@ export default function Perfil(){
           <div className="avaliacao"><strong>Roberto L. - ⭐⭐⭐⭐⭐</strong><p>"Muito profissional, preço justo."</p></div>
           <div className="avaliacao"><strong>Julia S. - ⭐⭐⭐⭐</strong><p>"Bom serviço, recomendo."</p></div>
 
-          <button onClick={()=>navigate(`/contatar/${id}`)} style={{width:'100%', marginTop:'16px', background:'#2563eb', color:'#fff', border:'none', padding:'12px', borderRadius:'10px', fontWeight:'700', cursor:'pointer'}}>Solicitar orçamento</button>
+          <button onClick={()=>navigate(`/contatar/${id}`)} style={{width:'100%', marginTop:'16px', background:'#2563eb', color:'#fff', border:'none', padding:'12px', borderRadius:'10px', fontWeight:'700', cursor:'pointer'}}>Solicitar Orçamento</button>
          <button onClick={()=>navigate(`/avaliar/${id}`)} style={{width:'100%', marginTop:'8px', background:'#fff', color:'#2563eb', border:'1px solid #2563eb', padding:'12px', borderRadius:'10px', fontWeight:'700', cursor:'pointer'}}>
          ⭐ Avaliar serviço
 </button>
         </>}
       </div>
     </div>
-  )
-}
+  )}
