@@ -1,16 +1,40 @@
 import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import './Contatar.css'
-
-const lista = [
-  {id:1, nome:"Carlos Silva", prof:"Elétrica", local:"Centro, Teresina - PI", img:"https://i.pravatar.cc/150?img=11"},
-  {id:2, nome:"João Pereira", prof:"Encanamento", local:"Dirceu, Teresina - PI", img:"https://i.pravatar.cc/150?img=15"},
-  {id:3, nome:"Maria Santos", prof:"Pintura", local:"Fátima, Teresina - PI", img:"https://i.pravatar.cc/150?img=26"},
-]
 
 export default function Contatar(){
   const {id} = useParams()
   const navigate = useNavigate()
-  const p = lista.find(x=> x.id == id) || lista[0]
+  const [p, setP] = useState(null)
+  const [problema, setProblema] = useState('')
+  const [localizacao, setLocalizacao] = useState('')
+  const [data, setData] = useState('')
+  const [hora, setHora] = useState('')
+
+  useEffect(()=>{
+    fetch(`http://localhost:3001/api/profissional/perfil/${id}`)
+      .then(r=>r.json())
+      .then(d=>setP(d))
+      .catch(()=>setP({id:1, nome:"Carlos Silva", prof:"Elétrica", local:"Centro, Teresina - PI", img:"https://i.pravatar.cc/150?img=11", whatsapp:"5586988881111"}))
+  }, [id])
+
+  if(!p) return <div style={{padding:'20px'}}>Carregando...</div>
+
+  function falarWhatsApp(){
+    const msg = `Olá ${p.nome}! Vim pelo ReparaFácil.\nProblema: ${problema}\nLocal: ${localizacao}\nQuando: ${data} às ${hora}`
+    window.open(`https://wa.me/${p.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank')
+  }
+
+  async function solicitar(){
+    if(!data || !hora){ alert('⚠️ Escolha o dia e a hora no calendário!'); return }
+    await fetch('http://localhost:3001/api/agendamentos', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ clienteId:1, profissionalId:p.id, data, hora, servico:p.prof, problema, localizacao })
+    })
+    alert(`Agendado com ${p.nome} para ${data} às ${hora}!`)
+    navigate('/busca')
+  }
 
   return(
     <div className="contatar-container">
@@ -31,16 +55,29 @@ export default function Contatar(){
 
         <div className="input-group">
           <label>Descreva o problema</label>
-          <textarea placeholder="Ex: Minha tomada da cozinha não está funcionando..."></textarea>
+          <textarea value={problema} onChange={e=>setProblema(e.target.value)} placeholder="Ex: Minha tomada da cozinha..."></textarea>
         </div>
 
         <div className="input-group">
           <label>Localização</label>
-          <input placeholder="Ex: Rua 13 de Maio" />
+          <input value={localizacao} onChange={e=>setLocalizacao(e.target.value)} placeholder="Ex: Rua 13 de Maio, Centro - Teresina" />
         </div>
 
-        <button className="btn-whats" onClick={()=>window.open('https://wa.me/5586999999999','_blank')}>💬 Falar no WhatsApp</button>
-        <button className="btn-enviar" onClick={()=>{alert('Solicitação enviada!'); navigate('/busca')}}>Solicitar Serviço</button>
+        {/* AQUI ESTÁ O CALENDÁRIO QUE FALTAVA */}
+        <h3 style={{marginTop:'20px'}}>Quando você quer o serviço?</h3>
+        <div className="input-group" style={{display:'flex', gap:'10px'}}>
+          <div style={{flex:1}}>
+            <label>📅 Escolha o dia</label>
+            <input type="date" value={data} onChange={e=>setData(e.target.value)} style={{width:'100%', padding:'12px', borderRadius:'8px', border:'1px solid #ddd'}} />
+          </div>
+          <div style={{flex:1}}>
+            <label>⏰ Escolha a hora</label>
+            <input type="time" value={hora} onChange={e=>setHora(e.target.value)} style={{width:'100%', padding:'12px', borderRadius:'8px', border:'1px solid #ddd'}} />
+          </div>
+        </div>
+
+        <button className="btn-whats" onClick={falarWhatsApp}>💬 Falar no WhatsApp</button>
+        <button className="btn-enviar" onClick={solicitar}>Solicitar Serviço - Agendar {data && hora ? `${data} às ${hora}` : ''}</button>
       </div>
     </div>
   )

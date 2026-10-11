@@ -1,11 +1,12 @@
 import { Link, useParams, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import './Perfil.css'
 
 const profissionais = {
   1:{
     nome:"Carlos Silva", prof:"Elétrica", local:"Centro, Teresina - PI", exp:"8 anos",
     desc:"Especialista em instalações elétricas residenciais e prediais.",
-    img:"https://i.pravatar.cc/150?img=11",
+    img:"https://i.pravatar.cc/150?img=11", whatsapp:"5586988881111",
     orcamentos:[
       {servico:"Instalação de chuveiro", preco:"R$ 80 - R$ 150"},
       {servico:"Troca de fiação (por cômodo)", preco:"R$ 120 - R$ 250"},
@@ -15,7 +16,7 @@ const profissionais = {
   2:{
     nome:"João Pereira", prof:"Encanamento", local:"Dirceu, Teresina - PI", exp:"12 anos",
     desc:"Desentupimentos e vazamentos.",
-    img:"https://i.pravatar.cc/150?img=15",
+    img:"https://i.pravatar.cc/150?img=15", whatsapp:"5586988882222",
     orcamentos:[
       {servico:"Desentupimento simples", preco:"R$ 90 - R$ 180"},
       {servico:"Caça vazamento", preco:"R$ 150 - R$ 300"},
@@ -24,7 +25,7 @@ const profissionais = {
   3:{
     nome:"Maria Santos", prof:"Pintura", local:"Fátima, Teresina - PI", exp:"6 anos",
     desc:"Pintura residencial premium.",
-    img:"https://i.pravatar.cc/150?img=5",
+    img:"https://i.pravatar.cc/150?img=5", whatsapp:"5586988883333",
     orcamentos:[
       {servico:"Pintura por m²", preco:"R$ 25 - R$ 45"},
       {servico:"Parede 3x3m completa", preco:"R$ 300 - R$ 500"},
@@ -33,17 +34,30 @@ const profissionais = {
   4:{
     nome:"Pedro Costa", prof:"Marcenaria", local:"Mocambinho, Teresina - PI", exp:"10 anos",
     desc:"Móveis planejados.",
-    img:"https://i.pravatar.cc/150?img=12",
+    img:"https://i.pravatar.cc/150?img=12", whatsapp:"5586988884444",
     orcamentos:[
       {servico:"Prateleira sob medida", preco:"R$ 120 - R$ 250"},
       {servico:"Conserto de porta/gaveta", preco:"R$ 50 - R$ 120"},
     ]
   },
 }
+
 export default function Perfil(){
   const {id} = useParams()
   const navigate = useNavigate()
-  const prof = profissionais[id] || {nome:"Meu Perfil", prof:"Cliente", local:"Teresina - PI", exp:"", desc:"Seu perfil de cliente", img:"https://i.pravatar.cc/150?img=11", orcamentos:[]}
+  const [profBackend, setProfBackend] = useState(null)
+
+  // INTEGRAÇÃO 
+  useEffect(()=>{
+    fetch(`http://localhost:3001/api/profissional/perfil/${id}`)
+      .then(r=>r.json())
+      .then(d=>{ if(d && d.id) setProfBackend(d) })
+      .catch(()=>{})
+  }, [id])
+
+  
+  const local = profissionais[id] || {nome:"Meu Perfil", prof:"Cliente", local:"Teresina - PI", exp:"", desc:"Seu perfil de cliente", img:"https://i.pravatar.cc/150?img=11", orcamentos:[], whatsapp:"5586999999999"}
+  const prof = profBackend ? {...local, ...profBackend} : local
 
   return(
     <div className="perfil-container">
@@ -56,7 +70,7 @@ export default function Perfil(){
           <p style={{color:'#2563eb', fontWeight:'700'}}>{prof.prof} {prof.exp && `• ${prof.exp}`}</p>
           <p>📍 {prof.local}</p>
           <p style={{fontSize:'13px', color:'#555', marginTop:'8px'}}>{prof.desc}</p>
-          <div style={{marginTop:'10px', fontSize:'13px'}}>⭐ 4,8 (120 avaliações)</div>
+          <div style={{marginTop:'10px', fontSize:'13px'}}>⭐ 4,8 (120 avaliações) {profBackend && <span style={{color:'green'}}>• Dados do backend</span>}</div>
         </div>
 
         {id && <>
@@ -84,10 +98,11 @@ export default function Perfil(){
           <div className="avaliacao"><strong>Julia S. - ⭐⭐⭐⭐</strong><p>"Bom serviço, recomendo."</p></div>
 
           <button onClick={()=>navigate(`/contatar/${id}`)} style={{width:'100%', marginTop:'16px', background:'#2563eb', color:'#fff', border:'none', padding:'12px', borderRadius:'10px', fontWeight:'700', cursor:'pointer'}}>Solicitar Orçamento</button>
-         <button onClick={()=>navigate(`/avaliar/${id}`)} style={{width:'100%', marginTop:'8px', background:'#fff', color:'#2563eb', border:'1px solid #2563eb', padding:'12px', borderRadius:'10px', fontWeight:'700', cursor:'pointer'}}>
-         ⭐ Avaliar serviço
-</button>
+          <button onClick={()=>navigate(`/avaliar/${id}`)} style={{width:'100%', marginTop:'8px', background:'#fff', color:'#2563eb', border:'1px solid #2563eb', padding:'12px', borderRadius:'10px', fontWeight:'700', cursor:'pointer'}}>
+            ⭐ Avaliar serviço
+          </button>
         </>}
       </div>
     </div>
-  )}
+  )
+}

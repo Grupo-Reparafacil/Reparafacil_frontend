@@ -6,6 +6,7 @@ import Avaliar from './Avaliar'
 import AvaliacaoEnviada from './AvaliacaoEnviada'
 import Login from './login'
 import NovaPagina from './NovaPagina'
+import MeuPerfil from './MeuPerfil' 
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
         <Route path="/criar-conta" element={<NovaPagina />} />
         <Route path="/busca" element={<Busca />} />
         <Route path="/perfil/:id" element={<Perfil />} />
-        <Route path="/meuperfil" element={<Perfil />} />
+        <Route path="/meuperfil" element={<MeuPerfil />} /> 
         <Route path="/contatar/:id" element={<Contatar />} />
         <Route path="/avaliar/:id" element={<Avaliar />} />
         <Route path="/avaliacao-enviada/:id" element={<AvaliacaoEnviada />} />

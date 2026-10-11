@@ -3,6 +3,7 @@ import { useState } from 'react'
 
 const profissionais = {
   1:{nome:"Carlos Silva", prof:"elétrico", img:"https://i.pravatar.cc/150?img=11"},
+  2:{nome:"João Pereira", prof:"encanador", img:"https://i.pravatar.cc/150?img=15"},
 }
 
 export default function Avaliar(){
@@ -11,14 +12,49 @@ export default function Avaliar(){
   const [nota, setNota] = useState(0)
   const [comentario, setComentario] = useState('')
   const [hover, setHover] = useState(0)
+  const [carregando, setCarregando] = useState(false)
   const prof = profissionais[id] || profissionais[1]
 
-  function enviar(){
+  async function enviar(){
     if(nota===0){ alert("Selecione as estrelas"); return; }
-    const avaliacoes = JSON.parse(localStorage.getItem(`avaliacoes_${id}`) || "[]")
-    avaliacoes.push({nota, comentario, nome:"Você", data:new Date().toLocaleDateString()})
-    localStorage.setItem(`avaliacoes_${id}`, JSON.stringify(avaliacoes))
-    navigate(`/avaliacao-enviada/${id}`)
+    setCarregando(true)
+
+    try {
+      const cliente = JSON.parse(localStorage.getItem('cliente') || '{}')
+
+      // LIGA COM BACKEND - Hugo Napoleão
+      const resposta = await fetch('http://localhost:3001/api/avaliacoes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          profissionalId: Number(id),
+          nota,
+          comentario,
+          nome: cliente.nome || "Cliente Hugo Napoleão",
+          clienteId: cliente.id || 1
+        })
+      })
+
+      const dados = await resposta.json()
+
+      if(!resposta.ok){
+        throw new Error(dados.erro || 'Erro ao enviar avaliação')
+      }
+
+      console.log("Avaliação salva no backend:", dados)
+
+      // Mantém também no localStorage como backup
+      const avaliacoesLocal = JSON.parse(localStorage.getItem(`avaliacoes_${id}`) || "[]")
+      avaliacoesLocal.push({nota, comentario, nome: cliente.nome || "Você", data:new Date().toLocaleDateString()})
+      localStorage.setItem(`avaliacoes_${id}`, JSON.stringify(avaliacoesLocal))
+
+      navigate(`/avaliacao-enviada/${id}`)
+
+    } catch (err) {
+      alert(err.message)
+    } finally {
+      setCarregando(false)
+    }
   }
 
   return(
@@ -41,7 +77,9 @@ export default function Avaliar(){
         </div>
         <label style={{fontWeight:'700', fontSize:'14px'}}>Deixe um comentário</label>
         <textarea value={comentario} onChange={e=>setComentario(e.target.value)} placeholder="Conte como foi a experiência..." style={{width:'100%', minHeight:'100px', marginTop:'8px', padding:'12px', borderRadius:'12px', border:'1px solid #ddd', boxSizing:'border-box'}} />
-        <button onClick={enviar} style={{width:'100%', marginTop:'16px', background:'#2563eb', color:'#fff', border:'none', padding:'12px', borderRadius:'10px', fontWeight:'700', cursor:'pointer'}}>Avaliar</button>
+        <button onClick={enviar} disabled={carregando} style={{width:'100%', marginTop:'16px', background: carregando? '#9ca3af' : '#2563eb', color:'#fff', border:'none', padding:'12px', borderRadius:'10px', fontWeight:'700', cursor:'pointer'}}>
+          {carregando? 'Enviando...' : 'Avaliar'}
+        </button>
       </div>
     </div>
   )

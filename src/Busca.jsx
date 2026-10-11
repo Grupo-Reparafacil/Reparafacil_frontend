@@ -1,23 +1,41 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
-const profissionais = [
-  {id:1, nome:"Carlos Silva", prof:"Elétrica", cat:"Elétrica", bairro:"Centro", local:"Centro, Teresina - PI • 8 anos", img:"https://i.pravatar.cc/150?img=11", nota:"4,8 (120)"},
-  {id:2, nome:"João Pereira", prof:"Encanamento", cat:"Encanamento", bairro:"Dirceu", local:"Dirceu, Teresina - PI • 12 anos", img:"https://i.pravatar.cc/150?img=15", nota:"4,9 (89)"},
-  {id:3, nome:"Maria Santos", prof:"Pintura", cat:"Pintura", bairro:"Fátima", local:"Fátima, Teresina - PI • 6 anos", img:"https://i.pravatar.cc/150?img=5", nota:"4,7 (55)"},
-  {id:4, nome:"Pedro Costa", prof:"Marcenaria", cat:"Marcenaria", bairro:"Mocambinho", local:"Mocambinho, Teresina - PI • 10 anos", img:"https://i.pravatar.cc/150?img=12", nota:"5,0 (210)"},
+
+const listaInicial = [
+  {id:1, nome:"Carlos Silva", prof:"Elétrica", cat:"Elétrica", bairro:"Centro", local:"Centro, Teresina - PI • 8 anos", img:"https://i.pravatar.cc/150?img=11", nota:"4,8 (120)", whatsapp:"5586988881111"},
+  {id:2, nome:"João Pereira", prof:"Encanamento", cat:"Encanamento", bairro:"Dirceu", local:"Dirceu, Teresina - PI • 12 anos", img:"https://i.pravatar.cc/150?img=15", nota:"4,9 (89)", whatsapp:"5586988882222"},
+  {id:3, nome:"Maria Santos", prof:"Pintura", cat:"Pintura", bairro:"Fátima", local:"Fátima, Teresina - PI • 6 anos", img:"https://i.pravatar.cc/150?img=5", nota:"4,7 (55)", whatsapp:"5586988883333"},
+  {id:4, nome:"Pedro Costa", prof:"Marcenaria", cat:"Marcenaria", bairro:"Mocambinho", local:"Mocambinho, Teresina - PI • 10 anos", img:"https://i.pravatar.cc/150?img=12", nota:"5,0 (210)", whatsapp:"5586988884444"},
 ]
 
 export default function Busca(){
+  const [profissionais, setProfissionais] = useState(listaInicial) // COMEÇA COM A LISTA DELA
   const [busca,setBusca] = useState('')
   const [cat,setCat] = useState('Todas')
   const [bairro,setBairro] = useState('Todos')
   const navigate = useNavigate()
 
+  // INTEGRAÇÃO COM BACKEND 
+  useEffect(()=>{
+    async function buscarBackend(){
+      try{
+        const res = await fetch('http://localhost:3001/api/profissionais')
+        const dados = await res.json()
+        if(dados && dados.length > 0){
+          setProfissionais(dados) // SE BACKEND TIVER DADOS, USA BACKEND
+        }
+      }catch{
+        console.log("Backend desligado, mantendo lista local de Teresina")
+      }
+    }
+    buscarBackend()
+  }, [])
+
   const filtrados = profissionais.filter(p => {
     const nomeOk = p.nome.toLowerCase().includes(busca.toLowerCase()) || p.prof.toLowerCase().includes(busca.toLowerCase())
-    const catOk = cat === 'Todas' || p.cat === cat
-    const bairroOk = bairro === 'Todos' || p.bairro === bairro
+    const catOk = cat === 'Todas' || cat === 'Todas categorias' || p.cat === cat || p.cat.trim() === cat.trim()
+    const bairroOk = bairro === 'Todos' || bairro === 'Localização' || p.bairro === bairro
     return nomeOk && catOk && bairroOk
   })
 
@@ -31,17 +49,17 @@ export default function Busca(){
       <div style={{maxWidth:'700px', margin:'0 auto', padding:'16px'}}>
         <h3>{filtrados.length} profissionais encontrados</h3>
         
-        {/* FILTROS DO DIAGRAMA - PASSO 4 e 6 */}
+        
         <div style={{display:'flex', gap:'8px', margin:'12px 0'}}>
           <select value={cat} onChange={e=>setCat(e.target.value)} style={{flex:1, padding:'10px', borderRadius:'10px', border:'1px solid #ddd'}}>
-            <option>Todas categorias</option>
-            <option> Elétrica</option>
+            <option>Todas</option>
+            <option>Elétrica</option>
             <option>Encanamento</option>
             <option>Pintura</option>
             <option>Marcenaria</option>
           </select>
           <select value={bairro} onChange={e=>setBairro(e.target.value)} style={{flex:1, padding:'10px', borderRadius:'10px', border:'1px solid #ddd'}}>
-            <option>Localização</option>
+            <option>Todos</option>
             <option>Centro</option>
             <option>Dirceu</option>
             <option>Fátima</option>

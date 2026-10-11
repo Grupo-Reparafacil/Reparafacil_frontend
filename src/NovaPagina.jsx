@@ -4,18 +4,55 @@ import './NovaPagina.css'
 
 function NovaPagina(){
   const navigate = useNavigate()
+  const [erro, setErro] = useState('')
+  const [carregando, setCarregando] = useState(false)
   const [form, setForm] = useState({
-    nome: '', cpf: '', email: '', senha: '', perfil: 'Cliente'
+    nome: '', cpf: '', email: '', senha: '', perfil: 'Cliente', cidade: 'Hugo Napoleão - PI'
   })
 
   function handleChange(e){
     setForm({...form, [e.target.name]: e.target.value})
   }
 
-  function handleSubmit(e){
+  async function handleSubmit(e){
     e.preventDefault()
-    // por enquanto só navega
-    navigate('/login')
+    setErro('')
+    setCarregando(true)
+
+    if(!form.nome || !form.email || !form.senha){
+      setErro('Preencha nome, email e senha')
+      setCarregando(false)
+      return
+    }
+
+    try {
+      const resposta = await fetch('http://localhost:3001/api/clientes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          nome: form.nome, 
+          email: form.email, 
+          senha: form.senha, 
+          cidade: form.cidade,
+          cpf: form.cpf,
+          perfil: form.perfil
+        })
+      })
+
+      const dados = await resposta.json()
+
+      if(!resposta.ok){
+        throw new Error(dados.erro || 'Erro ao criar conta')
+      }
+
+      alert(`Conta de ${form.perfil} criada com sucesso! Faça login.`)
+      navigate('/login')
+
+    } catch (err) {
+      setErro(err.message)
+    } finally {
+      setCarregando(false)
+    }
   }
 
   return(
@@ -23,7 +60,9 @@ function NovaPagina(){
       <div className="form-card">
         <div className="logo-box">R</div>
         <h1 className="brand">Criar Conta</h1>
-        <p className="subtitle">Cadastre-se no Repara Fácil</p>
+        <p className="subtitle">Cadastre-se no Repara Fácil - Hugo Napoleão PI</p>
+
+        {erro && <div style={{background:'#ffdddd', color:'#d00', padding:'10px', borderRadius:'8px', marginBottom:'15px', textAlign:'center'}}>{erro}</div>}
 
         <form onSubmit={handleSubmit}>
           <div className="input-group">
@@ -47,6 +86,11 @@ function NovaPagina(){
           </div>
 
           <div className="input-group">
+            <label>Cidade</label>
+            <input name="cidade" placeholder="Hugo Napoleão - PI" value={form.cidade} onChange={handleChange} />
+          </div>
+
+          <div className="input-group">
             <label>Tipo de perfil</label>
             <select name="perfil" value={form.perfil} onChange={handleChange}>
               <option>Cliente</option>
@@ -54,7 +98,9 @@ function NovaPagina(){
             </select>
           </div>
 
-          <button type="submit" className="btn-primary">Criar conta</button>
+          <button type="submit" className="btn-primary" disabled={carregando}>
+            {carregando ? 'Criando...' : 'Criar conta'}
+          </button>
         </form>
 
         <p className="footer-text">Já tem conta? <Link to="/login">Fazer login</Link></p>
