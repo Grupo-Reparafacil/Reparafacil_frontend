@@ -21,7 +21,7 @@ export default function Login(){
     }
 
     try {
-      const resposta = await fetch('http://localhost:3001/api/clientes/login', {
+      const resposta = await fetch('https://reparafacil-backend.onrender.com/api/clientes/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, senha })
