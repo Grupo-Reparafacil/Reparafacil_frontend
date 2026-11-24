@@ -35,7 +35,7 @@ Build para produção
 npm run build
 
 Deploy
-Frontend (Vercel): COLAR A URL DA VERCEL AQUI
+Frontend (Vercel): https://reparafacilfrontend.vercel.app
 Backend (Render): COLAR A URL DO RENDER AQUI
 Backend - repositório: https://github.com/Grupo-Reparafacil/Reparafacil_backend
 Estrutura
