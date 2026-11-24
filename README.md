@@ -1,6 +1,6 @@
 # REPARAFÁCIL — Frontend
 
-Plataforma web que conecta clientes que precisam de serviços de reparo e manutenção a profissionais técnicos qualificados.
+Plataforma web que conecta clientes que necessitam de serviços de reparo e manutenção a profissionais técnicos específicos.
 
 O cliente busca por profissional, visualiza o perfil, o orçamento estimado e as avaliações, e entra em contato via WhatsApp. O profissional gerencia seu perfil, serviços e avaliações.
 
@@ -12,7 +12,7 @@ O cliente busca por profissional, visualiza o perfil, o orçamento estimado e as
 - Perfil do profissional com habilidades, orçamento estimado e avaliações
 - Avaliação de serviço com estrelas e comentário
 - Dashboard do usuário / Meu Perfil
-- Catálogo de serviços (ADM)
+- Catálogo de Serviços (ADM)
 
 ## Tecnologias
 
