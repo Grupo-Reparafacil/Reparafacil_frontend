@@ -12,7 +12,7 @@ export default function Contatar(){
   const [hora, setHora] = useState('')
 
   useEffect(()=>{
-    fetch(`http://localhost:3001/api/profissional/perfil/${id}`)
+    fetch(`https://reparafacil-backend.onrender.com/api/profissional/perfil/${id}`)
       .then(r=>r.json())
       .then(d=>setP(d))
       .catch(()=>setP({id:1, nome:"Carlos Silva", prof:"Elétrica", local:"Centro, Teresina - PI", img:"https://i.pravatar.cc/150?img=11", whatsapp:"5586988881111"}))
@@ -25,15 +25,8 @@ export default function Contatar(){
     window.open(`https://wa.me/${p.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank')
   }
 
-  async function solicitar(){
-    if(!data || !hora){ alert('⚠️ Escolha o dia e a hora no calendário!'); return }
-    await fetch('http://localhost:3001/api/agendamentos', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ clienteId:1, profissionalId:p.id, data, hora, servico:p.prof, problema, localizacao })
-    })
-    alert(`Agendado com ${p.nome} para ${data} às ${hora}!`)
-    navigate('/busca')
+  function irParaAvaliar(){
+    navigate(`/avaliar/${id}`)
   }
 
   return(
@@ -63,7 +56,6 @@ export default function Contatar(){
           <input value={localizacao} onChange={e=>setLocalizacao(e.target.value)} placeholder="Ex: Rua 13 de Maio, Centro - Teresina" />
         </div>
 
-        {/* AQUI ESTÁ O CALENDÁRIO QUE FALTAVA */}
         <h3 style={{marginTop:'20px'}}>Quando você quer o serviço?</h3>
         <div className="input-group" style={{display:'flex', gap:'10px'}}>
           <div style={{flex:1}}>
@@ -76,8 +68,10 @@ export default function Contatar(){
           </div>
         </div>
 
+        <p style={{fontSize:'13px', color:'#666'}}>A agenda é feita pelo WhatsApp. Escolha o dia e a hora e envie no WhatsApp.</p>
+
         <button className="btn-whats" onClick={falarWhatsApp}>💬 Falar no WhatsApp</button>
-        <button className="btn-enviar" onClick={solicitar}>Solicitar Serviço - Agendar {data && hora ? `${data} às ${hora}` : ''}</button>
+        <button className="btn-enviar" onClick={irParaAvaliar}>⭐ Avaliar profissional</button>
       </div>
     </div>
   )
