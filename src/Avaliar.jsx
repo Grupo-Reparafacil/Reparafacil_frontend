@@ -23,11 +23,11 @@ export default function Avaliar(){
       const cliente = JSON.parse(localStorage.getItem('cliente') || '{}')
 
       // LIGA COM BACKEND - Hugo Napoleão
-      const resposta = await fetch('http://localhost:3001/api/avaliacoes', {
+      const resposta = await fetch('https://reparafacil-backend.onrender.com/api/avaliacoes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          profissionalId: Number(id),
+          profissionalId: id,
           nota,
           comentario,
           nome: cliente.nome || "Cliente Hugo Napoleão",
